@@ -7,6 +7,7 @@ require "fetchable/base"
 
 module Fetchable
   extend ActiveSupport::Concern
+
   def initialize args={}
     raise NotImplementedError
   end
@@ -14,7 +15,9 @@ module Fetchable
   module ClassMethods
     def where args={}
       response = connection.get "", args
-      response.body.map do |resource|
+      collection = parse_collection(response.body)
+
+      collection.map do |resource|
         self.new(resource)
       end
     end
@@ -23,6 +26,10 @@ module Fetchable
     private
     def resource_name
       self.to_s.downcase.pluralize
+    end
+
+    def parse_collection(response)
+      response
     end
   end
 end
