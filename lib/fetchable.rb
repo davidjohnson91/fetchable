@@ -7,6 +7,7 @@ require "fetchable/base"
 
 module Fetchable
   extend ActiveSupport::Concern
+  include Base
 
   def initialize args={}
     raise NotImplementedError
@@ -14,7 +15,8 @@ module Fetchable
 
   module ClassMethods
     def where args={}
-      response = connection.get "", args
+      request_parameters = whitelist_arguments(args)
+      response = connection.get resource_name, request_parameters
       collection = parse_collection(response.body)
 
       collection.map do |resource|
@@ -30,6 +32,14 @@ module Fetchable
 
     def parse_collection(response)
       response
+    end
+
+    def allowed_connection_options
+      []
+    end
+
+    def whitelist_arguments args
+      args.select{ |key,_| allowed_connection_options.include?(key) }
     end
   end
 end
