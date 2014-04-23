@@ -123,4 +123,43 @@ describe Fetchable do
       end
     end
   end
+
+  shared_examples_for "find" do
+    it "returns a single instance" do
+      expect(response).to be_a FetchableModel
+      expect(response.id).to eq id
+    end
+  end
+
+  describe ".find" do
+    let(:id) { 3 }
+    let(:response_hash) { { id: 3, name: "Test response" } }
+    let(:response) { subject.find(id) }
+
+    before do
+      subject.stub(:api_endpoint_url).and_return "http://example.test"
+    end
+
+    describe "default behavior" do
+      before do
+        subject.stub_chain(:connection, :get)
+          .and_return( double body: response_hash )
+      end
+
+      it_behaves_like "find"
+    end
+
+    describe "overridden behavior" do
+      context "custom parsing" do
+        before do
+          subject.stub_chain(:connection, :get)
+            .and_return( double body: { resource: { id: 3, name: "Test response" } } )
+
+          subject.stub(:parse_singular).and_return(response_hash)
+        end
+
+        it_behaves_like "find"
+      end
+    end
+  end
 end
