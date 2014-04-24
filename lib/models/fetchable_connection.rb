@@ -1,5 +1,5 @@
 class FetchableConnection
-  attr_reader :client, :args, :api_endpoint_url
+  attr_reader :client
 
   def initialize args
     @api_endpoint_url = args.delete(:api_endpoint_url)
@@ -24,6 +24,7 @@ class FetchableConnection
   end
 
   private
+  attr_reader :args, :api_endpoint_url
   def path_builder path
     combined_path = "#{path}?"
     args.each do |k, v|
@@ -33,7 +34,7 @@ class FetchableConnection
   end
 
   def create_client args
-    Faraday.new(args[:api_endpoint_url], ssl: { verify: false }) do |connection|
+    Faraday.new(api_endpoint_url, ssl: { verify: false }) do |connection|
       connection.use FaradayMiddleware::ParseJson, content_type: "application/json"
       connection.use FaradayMiddleware::FollowRedirects, limit: 3
       connection.use Faraday::Response::RaiseError
