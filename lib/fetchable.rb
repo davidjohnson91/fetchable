@@ -4,6 +4,7 @@ require "active_support/inflector"
 require "faraday"
 require "faraday_middleware"
 require "fetchable/base"
+require "models/fetchable_connection"
 
 module Fetchable
   extend ActiveSupport::Concern
