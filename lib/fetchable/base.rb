@@ -5,12 +5,7 @@ module Fetchable
     module ClassMethods
       private
       def connection
-        Faraday.new(api_endpoint_url, ssl: { verify: false }) do |connection|
-          connection.use FaradayMiddleware::ParseJson, content_type: "application/json"
-          connection.use FaradayMiddleware::FollowRedirects, limit: 3
-          connection.use Faraday::Response::RaiseError
-          connection.request :url_encoded
-        end
+        @connection ||= FetchableConnection.new(api_endpoint_url: api_endpoint_url)
       end
 
       def api_endpoint_url
