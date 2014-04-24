@@ -8,31 +8,24 @@ describe FetchableConnection do
     end
   end
 
-  describe "#get" do
-    it "makes a get request" do
-      expect_any_instance_of(Faraday::Connection).to receive(:get).with "foobar", {}
-      subject.get("foobar")
+  %i[get post put delete].each do |method_name|
+    it "makes a #{method_name} request" do
+      expect_any_instance_of(Faraday::Connection).to receive(method_name).with "foobar", {}
+      subject.send(method_name, "foobar")
     end
-  end
 
-  describe "#post" do
-    it "makes a post request" do
-      expect_any_instance_of(Faraday::Connection).to receive(:post).with "foobar", {}
-      subject.post("foobar")
-    end
-  end
+    it "appends api arguments to enpoint url" do
+      subject.stub(:args).and_return(
+        {
+          argument: "baz"
+        }
+      )
 
-  describe "#put" do
-    it "makes a put request" do
-      expect_any_instance_of(Faraday::Connection).to receive(:put).with "foobar", {}
-      subject.put("foobar")
-    end
-  end
+      expect_any_instance_of(Faraday::Connection)
+        .to receive(method_name)
+        .with "foobar?argument=baz", {}
 
-  describe "#delete" do
-    it "makes a delete request" do
-      expect_any_instance_of(Faraday::Connection).to receive(:delete).with "foobar", {}
-      subject.delete("foobar")
+      subject.send(method_name, "foobar")
     end
   end
 end
