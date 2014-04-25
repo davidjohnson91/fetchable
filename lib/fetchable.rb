@@ -18,7 +18,7 @@ module Fetchable
     def where args={}
       request_parameters = whitelist_arguments(args)
       response = connection.get collection_url, request_parameters
-      collection = parse_collection(response.body)
+      collection = parse_collection(response)
 
       collection.map do |resource|
         new resource
@@ -28,7 +28,7 @@ module Fetchable
 
     def find identifier
       response = connection.get singular_url identifier
-      resource = parse_singular response.body
+      resource = parse_singular response
       new resource
     end
 
@@ -46,11 +46,11 @@ module Fetchable
     end
 
     def parse_collection response
-      response
+      response.body[resource_name]
     end
 
     def parse_singular response
-      response
+      response.body
     end
 
     def allowed_connection_options

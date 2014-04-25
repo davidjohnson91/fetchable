@@ -37,6 +37,7 @@ class FetchableConnection
       connection.use FaradayMiddleware::FollowRedirects, limit: 3
       connection.use Faraday::Response::RaiseError
       connection.request :url_encoded
+      connection.adapter Faraday.default_adapter
     end
   end
 end
