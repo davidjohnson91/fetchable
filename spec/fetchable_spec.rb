@@ -45,14 +45,14 @@ describe Fetchable do
 
     it "requests based on the default RESTful route" do
       subject.stub_chain(:connection, :get)
-        .and_return( double body: response_no_root )
+        .and_return( double body: response )
 
       collection
     end
 
     it "returns an array of instances" do
       subject.stub_chain(:connection, :get)
-        .and_return( double body: response_no_root )
+        .and_return( double body: response )
 
       expect(collection.size).to eq(2)
       collection.each_with_index do |instance, index|
@@ -66,18 +66,14 @@ describe Fetchable do
     describe ".#{method_name}" do
       let(:expected_collection) { [{ id: 1, name: "Test One" }, { id: 2, name: "Test Two" }] }
 
-      let(:response_with_root) do
-        {
-          collection: expected_collection,
-          other_key: "foobar"
-        }
-      end
+      let(:response_with_root) { { "fetchablemodels" => expected_collection, "other_key" => "foobar" } }
+
       let(:response_no_root) { expected_collection }
 
       let(:collection) { subject.send(method_name) }
 
       describe "generic behaviors" do
-        let(:response) { response_no_root }
+        let(:response) { response_with_root }
 
         it_behaves_like "all"
       end
@@ -89,7 +85,7 @@ describe Fetchable do
         end
 
         context "response from server is different" do
-          let(:response) { response_with_root }
+          let(:response) { response_no_root }
 
           it_behaves_like "all"
         end
