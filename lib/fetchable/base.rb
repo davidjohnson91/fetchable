@@ -4,8 +4,8 @@ module Fetchable
 
     module ClassMethods
       private
-      def connection
-        @connection ||= FetchableConnection.new(api_endpoint_url: api_endpoint_url)
+      def fetchable_connection
+        @fetchable_connection ||= FetchableConnection.new(api_endpoint_url: api_endpoint_url)
       end
 
       def api_endpoint_url

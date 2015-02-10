@@ -17,7 +17,7 @@ module Fetchable
   module ClassMethods
     def where args={}
       request_parameters = whitelist_arguments(args)
-      response = connection.get collection_url, request_parameters
+      response = fetchable_connection.get collection_url, request_parameters
       collection = parse_collection(response)
 
       collection.map do |resource|
@@ -27,7 +27,7 @@ module Fetchable
     alias_method :all, :where
 
     def find identifier
-      response = connection.get singular_url identifier
+      response = fetchable_connection.get singular_url identifier
       resource = parse_singular response
       new resource
     end
