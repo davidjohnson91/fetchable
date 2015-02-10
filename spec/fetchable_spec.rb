@@ -44,14 +44,14 @@ describe Fetchable do
     end
 
     it "requests based on the default RESTful route" do
-      subject.stub_chain(:connection, :get)
+      subject.stub_chain(:fetchable_connection, :get)
         .and_return( double body: response )
 
       collection
     end
 
     it "returns an array of instances" do
-      subject.stub_chain(:connection, :get)
+      subject.stub_chain(:fetchable_connection, :get)
         .and_return( double body: response )
 
       expect(collection.size).to eq(2)
@@ -138,7 +138,7 @@ describe Fetchable do
 
     describe "default behavior" do
       before do
-        subject.stub_chain(:connection, :get)
+        subject.stub_chain(:fetchable_connection, :get)
           .and_return( double body: response_hash )
       end
 
@@ -148,7 +148,7 @@ describe Fetchable do
     describe "overridden behavior" do
       context "custom parsing" do
         before do
-          subject.stub_chain(:connection, :get)
+          subject.stub_chain(:fetchable_connection, :get)
             .and_return( double body: { resource: { id: 3, name: "Test response" } } )
 
           subject.stub(:parse_singular).and_return(response_hash)

@@ -21,7 +21,7 @@ describe Fetchable::Base do
     end
 
     it "returns a Faraday Connection" do
-      expect(subject.send(:connection)).to be_a FetchableConnection
+      expect(subject.send(:fetchable_connection)).to be_a FetchableConnection
     end
   end
 

@@ -3,33 +3,27 @@ class FetchableConnection
 
   def initialize args
     @api_endpoint_url = args.delete(:api_endpoint_url)
-    @args = args
     @client = create_client
   end
 
   def get(path, options={})
-    client.get(path_builder(path), options)
+    client.get(path, options)
   end
 
   def put(path, options={})
-   client.put(path_builder(path), options)
+   client.put(path, options)
   end
 
   def post(path, options={})
-    client.post(path_builder(path), options)
+    client.post(path, options)
   end
 
   def delete(path, options={})
-    client.delete(path_builder(path), options)
+    client.delete(path, options)
   end
 
   private
   attr_reader :args, :api_endpoint_url
-  def path_builder path
-    args.each_with_object("#{path}?") do |(k, v), str|
-      str << "#{k}=#{v}&"
-    end.chomp("&").chomp("?")
-  end
 
   def create_client
     Faraday.new(api_endpoint_url, ssl: { verify: false }) do |connection|

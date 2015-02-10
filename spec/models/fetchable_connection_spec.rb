@@ -15,19 +15,5 @@ describe FetchableConnection do
       expect_any_instance_of(Faraday::Connection).to receive(method_name).with "foobar", {}
       subject.send(method_name, "foobar")
     end
-
-    it "appends api arguments to enpoint url" do
-      subject.stub(:args).and_return(
-        {
-          argument: "baz"
-        }
-      )
-
-      expect_any_instance_of(Faraday::Connection)
-        .to receive(method_name)
-        .with "foobar?argument=baz", {}
-
-      subject.send(method_name, "foobar")
-    end
   end
 end
