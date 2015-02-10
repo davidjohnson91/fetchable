@@ -58,7 +58,7 @@ module Fetchable
     end
 
     def whitelist_arguments args
-      args.select{ |key,_| allowed_connection_options.include?(key) }
+      args.select{ |key,_| allowed_connection_options.include?(key) }.reverse_merge default_arguments
     end
   end
 end

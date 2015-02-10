@@ -15,6 +15,10 @@ module Fetchable
       def api_options
         {}
       end
+
+      def default_arguments
+        {}
+      end
     end
   end
 end
