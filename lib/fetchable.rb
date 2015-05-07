@@ -1,5 +1,6 @@
 require "fetchable/version"
 require "active_support/concern"
+require 'active_support/core_ext'
 require "active_support/inflector"
 require "faraday"
 require "faraday_middleware"
@@ -26,8 +27,8 @@ module Fetchable
     end
     alias_method :all, :where
 
-    def find identifier
-      response = fetchable_connection.get singular_url identifier
+    def find identifier, args={}
+      response = fetchable_connection.get singular_url(identifier), whitelist_arguments(args)
       resource = parse_singular response
       new resource
     end
